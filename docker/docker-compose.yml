@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://user:password@db:5432/bookings
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=123456789-secret
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bookings
+    ports:
+      - '5433:5432'
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+
+  healthcheck:
+    image: alpine:latest
+    command: ["sh", "-c", "while true; do sleep 30; done;"]
+    depends_on:
+      - app
+
+networks:
+  default:
+    driver: bridge

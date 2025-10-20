@@ -1,0 +1,50 @@
+The migrations directory will contain TypeScript migration files for managing database schema changes. Below is an example of a migration file that creates a bookings table.
+
+File: /bookings-microservice/bookings-microservice/src/database/migrations/1641234567890-CreateBookingsTable.ts
+
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+
+export class CreateBookingsTable1641234567890 implements MigrationInterface {
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.createTable(
+            new Table({
+                name: 'bookings',
+                columns: [
+                    {
+                        name: 'id',
+                        type: 'uuid',
+                        isPrimary: true,
+                        generationStrategy: 'uuid',
+                        default: 'uuid_generate_v4()',
+                    },
+                    {
+                        name: 'userId',
+                        type: 'uuid',
+                    },
+                    {
+                        name: 'startDate',
+                        type: 'timestamp',
+                    },
+                    {
+                        name: 'endDate',
+                        type: 'timestamp',
+                    },
+                    {
+                        name: 'createdAt',
+                        type: 'timestamp',
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                    {
+                        name: 'updatedAt',
+                        type: 'timestamp',
+                        default: 'CURRENT_TIMESTAMP',
+                    },
+                ],
+            }),
+        );
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable('bookings');
+    }
+}
