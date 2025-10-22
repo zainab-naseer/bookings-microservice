@@ -1,9 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
 import { BookingQueueProcessor } from './queues/booking-queue.processor';
-import { CleanupProcessor } from './processors/cleanup.processor';
+import { BookingsModule } from '../bookings/bookings.module';
 
 @Module({
-  providers: [BookingQueueProcessor, CleanupProcessor],
-  exports: [BookingQueueProcessor, CleanupProcessor],
+  imports: [
+    BullModule.registerQueue({ name: 'booking-queue' }),
+    forwardRef(() => BookingsModule),
+  ],
+  providers: [BookingQueueProcessor],
+  exports: [],
 })
 export class JobsModule {}
